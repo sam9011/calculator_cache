@@ -2,6 +2,7 @@ package com.java.calculator.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ public class CalculatorController {
 	private CalculatorService calculatorService;
 	
 
-	@GetMapping("/addition")
+	@PostMapping("/addition")
 	private Integer add(@RequestParam("val1")Integer value1, @RequestParam("val2") Integer value2 ) {
 		log.info("started addition value 1 = {} and value 2 = {}",value1,value2);
 		return calculatorService.add(value1,value2);
