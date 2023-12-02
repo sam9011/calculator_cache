@@ -1,8 +1,5 @@
 package com.java.calculator.service;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -75,5 +72,4 @@ public class CalculatorService {
 		repository.save(calculator);
 		return value1 * value2;
 	}
-
 }

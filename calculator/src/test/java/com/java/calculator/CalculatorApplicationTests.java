@@ -2,82 +2,63 @@ package com.java.calculator;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
-import com.java.calculator.exception.CalculatorException;
-import com.java.calculator.service.CalculatorService;
+import com.java.calculator.dao.Calculator;
 
 @SpringBootTest
-class CalculatorApplicationTests {
+public class CalculatorApplicationTests {
 
 
+	private int port = 8080;
+	
+	
+	private String baseUrl="http://localhost";
 
-//	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:4.4.2");
+	
+	private static RestTemplate restTemplate;
 	
 	@Autowired
-	MockMvc mockMvc;
+	private H2DatabaseTest h2dbRepository;
 	
-//	@DynamicPropertySource
-//	static void setProperty(DynamicPropertyRegistry registory) {
-//		registory.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
-//	}
-	
-	@Test
-	void addition() {
-//		mockMvc.perform(MockMvcRequestBuilders.post("/calculatorapi/v1/addition")
-//				.contentType(MediaType.APPLICATION_JSON)
+	@Before
+	public void init() {
+		restTemplate = new RestTemplate();
+		
 		
 	}
 	
-	@Autowired
-	private CalculatorService service ;
-	
 	
 	@Test
-	void add() {
+	public void testAddition() {
 		
-		Integer value1=10;
-		Integer value2=20;
-		Integer ans = null;
-		
-		ans = service.add(value1,value2);
-//		assertEquals(25,ans);
-	}
-	
-	@Test
-	void sub() {
-		Integer value1=10;
-		Integer value2=20;
-		Integer ans = null;
-		
-		ans = service.substract(value1,value2);
-//		assertEquals(10-15,ans);
-		
-	}
-	
-	@Test
-	void devide() throws CalculatorException {
-		Integer value1=10;
-		Integer value2=20;
-		Integer ans = null;
-		
-		ans = service.devide(value1,value2);
-//		assertEquals((10/15),ans);
-	}
-	
-	@Test
-	void multi() {
-		Integer value1=10;
-		Integer value2=20;
-		Long ans = null;
-		
-		ans = service.multi(value1,value2).longValue();
-//		assertEquals(0, ans);
-	}
-	
+		 HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(MediaType.APPLICATION_JSON);
+		 // Create a HttpEntity object with the request body and the headers
+        HttpEntity<String> requestEntity = new HttpEntity<>("Content-Type", headers);
 
+        // Send the POST request
+
+		baseUrl = baseUrl.concat(":").concat(port+"").concat("/addition");
+		String url =baseUrl.concat("?val1=16&val2=20");
+		  // Send the POST request
+        String response = restTemplate.postForObject(url, requestEntity, String.class);
+        System.out.println(response);
+		Calculator cal = h2dbRepository.findById(1).get();
+		int ans =cal.getValue1()+cal.getValue2();
+		
+		assertEquals(36, ans);
+	}
+	
+	
 
 }
